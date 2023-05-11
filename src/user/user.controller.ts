@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -40,5 +41,25 @@ export class UserController {
   @Delete('/delete/:email')
   deleteUser(@Param('email') email: string) {
     return this.userService.deleteUser(email);
+  }
+
+  @Get('send-otp')
+  async sendOtp(@Query('email') email: string): Promise<string> {
+    await this.userService.sendOtpEmail(email);
+    return 'OTP has been sent to your email';
+  }
+
+  @Post('verify-otp')
+  async verifyOtp(
+    @Body() body: { email: string; otp: string },
+  ): Promise<string> {
+    const { email, otp } = body;
+    const result = await this.userService.verifyOtp(email, otp);
+
+    if (result) {
+      return 'OTP verified successfully';
+    } else {
+      return 'OTP verification failed';
+    }
   }
 }

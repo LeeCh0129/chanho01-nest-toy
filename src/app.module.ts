@@ -8,22 +8,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UesrModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailController } from './mails/email.controller';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { typeORMConfig } from './configs/typeorm.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      // sqlite 설정 메서드
-      type: 'sqlite',
-      database: 'nest-auth-test.sqlite',
-      entities: [User],
-      synchronize: true, // 데이터베이스에 스키마를 동기화
-      logging: true, // sql 실행 로그 확인
+    TypeOrmModule.forRootAsync({
+      useClass: typeORMConfig,
     }),
+    // TypeOrmModule.forRoot({
+    //   // sqlite 설정 메서드
+    //   type: 'postgres',
+    //   database: 'nest-app',
+    //   entities: [User],
+    //   synchronize: true, // 데이터베이스에 스키마를 동기화
+    //   logging: true, // sql 실행 로그 확인
+    // }),
     MailerModule.forRoot({
       transport: {
         host: 'smtp.sendgrid.net',
@@ -47,7 +50,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 
     WeatherModule,
     UesrModule,
-    AuthModule,
   ],
   controllers: [AppController, EmailController],
   providers: [AppService],

@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # Environment files
 .env
+default.yaml
+development.yaml
+production.yaml

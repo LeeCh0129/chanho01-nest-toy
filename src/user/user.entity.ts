@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryColumn()
-  id?: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ unique: true })
   email: string;
@@ -14,6 +14,15 @@ export class User {
   @Column()
   username: string;
 
-  @Column({ default: true })
-  createdDt: Date = new Date();
+  // @Column({ unique: true, select: false })
+  // firebaseId: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdDt: Date;
+
+  @Column({ nullable: true })
+  otp: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  otpCreationTime: Date;
 }
