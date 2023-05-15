@@ -43,12 +43,14 @@ export class UserController {
     return this.userService.deleteUser(email);
   }
 
+  // OTP Send
   @Get('send-otp')
   async sendOtp(@Query('email') email: string): Promise<string> {
     await this.userService.sendOtpEmail(email);
     return 'OTP has been sent to your email';
   }
 
+  // OTP Verify
   @Post('verify-otp')
   async verifyOtp(
     @Body() body: { email: string; otp: string },

@@ -39,3 +39,4 @@ lerna-debug.log*
 default.yaml
 development.yaml
 production.yaml
+views/

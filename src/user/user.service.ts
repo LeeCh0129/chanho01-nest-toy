@@ -11,13 +11,13 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private mailService: MailerService,
   ) {}
-  // ❸ 유저 생성
+  // 유저 생성
   createUser(user): Promise<User> {
     console.log(user);
     return this.userRepository.save(user);
   }
 
-  // ❹ 한 명의 유저 정보 찾기
+  // 한 명의 유저 정보 찾기
   async getUser(email: string) {
     const result = await this.userRepository.findOne({
       where: { email },
@@ -25,7 +25,7 @@ export class UserService {
     return result;
   }
 
-  // ❺ 유저 정보 업데이트. username과 password만 변경
+  // 유저 정보 업데이트. username과 password만 변경
   async updateUser(email, _user) {
     const user: User = await this.getUser(email);
     console.log(_user);
@@ -35,11 +35,12 @@ export class UserService {
     this.userRepository.save(user);
   }
 
-  // ❻ 유저 정보 삭제
+  // 유저 정보 삭제
   deleteUser(email: any) {
     return this.userRepository.delete({ email });
   }
 
+  // OTP 생성 및 이메일 전송
   async sendOtpEmail(email: string): Promise<void> {
     const otp = generateOTP();
     const user = await this.userRepository.findOne({ where: { email } });
@@ -60,6 +61,8 @@ export class UserService {
       html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
     });
   }
+
+  // OTP 검증
   async verifyOtp(email: string, otp: string): Promise<boolean> {
     const user = await this.userRepository.findOne({ where: { email } });
 
@@ -67,6 +70,7 @@ export class UserService {
       throw new Error('User not found');
     }
 
+    // 현재 시간과 OTP생성시간의 차이를 계산하여 생성 시간 확인
     const now = new Date();
     const otpAgeInMinutes =
       (now.getTime() - user.otpCreationTime.getTime()) / 1000 / 60;

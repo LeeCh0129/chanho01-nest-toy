@@ -1,4 +1,4 @@
-### Create ❶ 유저 생성
+### Create 유저 생성
 POST http://localhost:3000/user/create
 content-type: application/json
 
@@ -8,22 +8,22 @@ content-type: application/json
   "email": "chanho990129@gmail.com"
 }
 
-### GetUser ❷ 유저 정보 찾기 
+### GetUser 유저 정보 찾기 
 GET http://localhost:3000/user/getUser/andy@podo.com
 
 
-### Update User ❸ 유저 정보 업데이트 
+### Update User 유저 정보 업데이트 
 PUT http://localhost:3000/user/update/andy@podo.com
 content-type: application/json
 
 {
-  "email": "andy@podo.com",
-  "username": "andy2",
-  "password": "test12345"
+  "email": "chanho990129@gmail.com",
+  "username": "이찬호",
+  "password": "1234"
 }
 
-### Delete User  ❹ 유저 삭제 
-DELETE http://localhost:3000/user/delete/andy@podo.com
+### Delete User 유저 삭제 
+DELETE http://localhost:3000/user/delete/chanho990129@gmail.com
 
 ### 잘못된 이메일을 입력한 경우 
 POST http://localhost:3000/user/create
@@ -31,6 +31,6 @@ content-type: application/json
 
 {
   "username": "andy",
-  "password": "test1234",
-  "email": "andy-podo2"
+  "password": "1234",
+  "email": "chanho-podo2"
 }

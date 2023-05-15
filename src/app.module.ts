@@ -13,6 +13,8 @@ import { EmailController } from './mails/email.controller';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { typeORMConfig } from './configs/typeorm.config';
+import { NaverMapModule } from './naver-map/naver-map.module';
+import { NaverMapController } from './naver-map/naver-map.controller';
 
 @Module({
   imports: [
@@ -50,8 +52,9 @@ import { typeORMConfig } from './configs/typeorm.config';
 
     WeatherModule,
     UesrModule,
+    NaverMapModule,
   ],
-  controllers: [AppController, EmailController],
+  controllers: [AppController, EmailController, NaverMapController],
   providers: [AppService],
 })
 export class AppModule {}
