@@ -4,6 +4,7 @@ import { generateOTP } from 'src/utils/generate-otp.util';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { MailerService } from '@nestjs-modules/mailer';
+import { OAuth2User } from 'src/auth/google-user.interface';
 
 @Injectable()
 export class UserService {
@@ -30,7 +31,7 @@ export class UserService {
     const user: User = await this.getUser(email);
     console.log(_user);
     user.username = _user.username;
-    user.password = _user.password;
+    // user.password = _user.password;
     console.log(user);
     this.userRepository.save(user);
   }
@@ -38,6 +39,23 @@ export class UserService {
   // 유저 정보 삭제
   deleteUser(email: any) {
     return this.userRepository.delete({ email });
+  }
+
+  async findByProviderIdOrSave(googleUser: OAuth2User) {
+    const { providerId, provider, email, name } = googleUser;
+
+    const user = await this.userRepository.findOne({ where: { providerId } });
+    if (user) {
+      return user;
+    }
+
+    const newUser = new User();
+    newUser.provider = provider;
+    newUser.providerId = providerId;
+    newUser.email = email;
+    newUser.username = name;
+
+    return await this.userRepository.save(newUser);
   }
 
   // OTP 생성 및 이메일 전송
@@ -76,8 +94,10 @@ export class UserService {
       (now.getTime() - user.otpCreationTime.getTime()) / 1000 / 60;
 
     if (user.otp === otp && otpAgeInMinutes <= 5) {
-      user.otp = null;
-      user.otpCreationTime = null;
+      // user.otp = null;
+      // user.otpCreationTime = null;
+      user.otp = otp;
+      user.otpCreationTime = now;
       await this.userRepository.save(user);
       return true;
     } else {

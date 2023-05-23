@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Posts } from 'src/post/post.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -8,14 +15,17 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
-  password: string;
+  // @Column({ nullable: true })
+  // password: string;
 
   @Column()
   username: string;
 
-  // @Column({ unique: true, select: false })
-  // firebaseId: string;
+  @Column()
+  provider: string;
+
+  @Column()
+  providerId: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdDt: Date;
@@ -25,4 +35,7 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   otpCreationTime: Date;
+
+  @OneToMany(() => Posts, (post) => post.user)
+  posts: Posts[];
 }

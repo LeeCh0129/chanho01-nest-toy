@@ -15,20 +15,20 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { typeORMConfig } from './configs/typeorm.config';
 import { NaverMapModule } from './naver-map/naver-map.module';
 import { NaverMapController } from './naver-map/naver-map.controller';
+import { UploadsModule } from './uploads/uploads.module';
+import { ImageModule } from './image/image.module';
+import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmExModule } from './typeorm/typeorm-ex.module';
+import { PostRepository } from './post/post.repository';
+import { PostModule } from './post/post.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useClass: typeORMConfig,
     }),
-    // TypeOrmModule.forRoot({
-    //   // sqlite 설정 메서드
-    //   type: 'postgres',
-    //   database: 'nest-app',
-    //   entities: [User],
-    //   synchronize: true, // 데이터베이스에 스키마를 동기화
-    //   logging: true, // sql 실행 로그 확인
-    // }),
     MailerModule.forRoot({
       transport: {
         host: 'smtp.sendgrid.net',
@@ -50,9 +50,20 @@ import { NaverMapController } from './naver-map/naver-map.controller';
       envFilePath: 'config/.env',
     }),
 
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', 'build'),
+      exclude: ['/api*'], // optionally exclude APIs
+    }),
+
+    TypeOrmExModule.forCustomRepository([PostRepository]),
     WeatherModule,
     UesrModule,
+    PostModule,
     NaverMapModule,
+    UploadsModule,
+    ImageModule,
+    AuthModule,
+    PassportModule,
   ],
   controllers: [AppController, EmailController, NaverMapController],
   providers: [AppService],

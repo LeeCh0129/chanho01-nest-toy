@@ -10,7 +10,7 @@ export class typeORMConfig implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: dbConfig.type,
+      type: 'mysql',
       host: process.env.RDS_HOSTNAME || dbConfig.host,
       port: process.env.RDS_PORT || dbConfig.port,
       username: process.env.RDS_USERNAME || dbConfig.username,
