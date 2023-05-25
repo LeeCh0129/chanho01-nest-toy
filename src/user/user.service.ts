@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { generateOTP } from 'src/utils/generate-otp.util';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import { MailerService } from '@nestjs-modules/mailer';
-import { OAuth2User } from 'src/auth/google-user.interface';
+import { OAuth2User } from 'src/auth/oauth2-user.interface';
 
 @Injectable()
 export class UserService {
@@ -12,14 +16,18 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private mailService: MailerService,
   ) {}
+
   // 유저 생성
-  createUser(user): Promise<User> {
+  async createUser(user): Promise<User> {
     console.log(user);
     return this.userRepository.save(user);
   }
 
   // 한 명의 유저 정보 찾기
   async getUser(email: string) {
+    if (!email) {
+      throw new BadRequestException('');
+    }
     const result = await this.userRepository.findOne({
       where: { email },
     });
@@ -42,7 +50,7 @@ export class UserService {
   }
 
   async findByProviderIdOrSave(googleUser: OAuth2User) {
-    const { providerId, provider, email, name } = googleUser;
+    const { providerId, provider, email, username } = googleUser;
 
     const user = await this.userRepository.findOne({ where: { providerId } });
     if (user) {
@@ -53,7 +61,7 @@ export class UserService {
     newUser.provider = provider;
     newUser.providerId = providerId;
     newUser.email = email;
-    newUser.username = name;
+    newUser.username = username;
 
     return await this.userRepository.save(newUser);
   }

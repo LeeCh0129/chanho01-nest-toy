@@ -11,12 +11,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PostService } from './post.service';
-import { CreatePostDto } from './create-post.dto';
-import { User } from 'src/user/user.entity';
+import { CreatePostDto } from './dtos/create-post.dto';
+import { User } from 'src/entities/user.entity';
 import { RequestWithUser } from 'src/auth/auth.interface';
-import { UpdatePostDto } from './update-post.dto';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { Posts } from './post.entity';
+import { UpdatePostDto } from './dtos/update-post.dto';
+import { GetUser } from 'src/decorators/get-user.decorator';
 
 @Controller('post')
 // @UseGuards(AuthGuard())
@@ -25,16 +24,25 @@ export class PostController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  createPost(
-    @Body() createPostDto: CreatePostDto,
-    @GetUser() user: User,
-  ): Promise<Posts> {
-    return this.postService.createPost(createPostDto, user);
+  createPost(@Body() createPostDto: CreatePostDto, @GetUser() user: User) {
+    console.log(user);
+    return this.postService.createPost(
+      user,
+      createPostDto.title,
+      createPostDto.content,
+    );
   }
 
   @Get()
-  getAllPosts(@Req() req: RequestWithUser) {
-    return this.postService.getAllPosts(req.user);
+  @UseGuards(AuthGuard('jwt'))
+  getAllPosts() {
+    return this.postService.getAllPosts();
+  }
+
+  @Get('my-posts')
+  @UseGuards(AuthGuard('jwt'))
+  getMyPosts(@GetUser() user: User) {
+    return this.postService.getMyPosts(user);
   }
 
   @Get(':id')

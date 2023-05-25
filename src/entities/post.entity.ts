@@ -6,13 +6,13 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { PostStatus } from './post-status.enum';
-import { User } from '../user/user.entity';
+import { PostStatus } from '../post/post-status.enum';
+import { User } from './user.entity';
 
 @Entity()
 export class Posts extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  postId: number;
 
   @Column()
   title: string;
@@ -28,8 +28,8 @@ export class Posts extends BaseEntity {
   status: PostStatus;
 
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: 'userId' }) // 외래 키를 userId로 지정
-  user: User;
+  // @JoinColumn({ name: 'userId' }) // 외래 키를 userId로 지정
+  author: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

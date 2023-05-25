@@ -9,32 +9,6 @@ import { RequestWithUser } from './auth.interface';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  //   async googleAuth(@Req() req) {}
-  async googleAuth(): Promise<void> {}
-
-  //   @Get('google/redirect')
-  //   @UseGuards(AuthGuard('google'))
-  //   googleAuthRedirect(@Req() req) {
-  //     return this.authService.googleLogin(req);
-  //   }
-
-  @Get('google/redirect')
-  @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req: RequestWithUser, @Res() res: Response) {
-    const user = req.user;
-    const payload: JwtPayload = { sub: user.providerId, email: user.email };
-    const { accessToken, refreshToken } = await this.authService.getToken(
-      payload,
-    );
-
-    res.cookie('access-token', accessToken);
-    res.cookie('refresh-token', refreshToken);
-    console.log(accessToken);
-    return res.redirect('/');
-  }
-
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
   getProfile(@Req() req: RequestWithUser) {
@@ -47,33 +21,98 @@ export class AuthController {
     return { title: 'Login' };
   }
 
+  // Google
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(): Promise<void> {}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req: RequestWithUser, @Res() res: Response) {
+    const user = req.user;
+    const payload: JwtPayload = {
+      sub: user.providerId,
+      email: user.email,
+      userId: user.userId,
+    };
+    const { accessToken, refreshToken } = await this.authService.getToken(
+      payload,
+    );
+
+    res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
+    console.log(accessToken);
+    return res.redirect('/');
+  }
+
+  // Naver
   @Get('naver')
   @UseGuards(AuthGuard('naver'))
   async naverAuth(@Req() req) {}
 
   @Get('naver/redirect')
   @UseGuards(AuthGuard('naver'))
-  naverAuthRedirect(@Req() req) {
-    return this.authService.naverLogin(req);
+  async naverAuthRedirect(@Req() req: RequestWithUser, @Res() res: Response) {
+    const user = req.user;
+    const payload: JwtPayload = {
+      sub: user.providerId,
+      email: user.email,
+      userId: user.userId,
+    };
+    const { accessToken, refreshToken } = await this.authService.getToken(
+      payload,
+    );
+
+    res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
+    console.log(accessToken);
+    return res.redirect('/');
   }
 
   @Get('kakao')
   @UseGuards(AuthGuard('kakao'))
-  async kakaoAuth(@Req() req) {}
+  async kakaoAuth(@Req() req) {
+    return;
+  }
 
   @Get('kakao/redirect')
   @UseGuards(AuthGuard('kakao'))
-  kakaoAuthRedirect(@Req() req) {
-    return this.authService.kakaoLogin(req);
+  async kakaoAuthRedirect(@Req() req: RequestWithUser, @Res() res: Response) {
+    const user = req.user;
+    const payload: JwtPayload = {
+      sub: user.providerId,
+      email: user.email,
+      userId: user.userId,
+    };
+    const { accessToken, refreshToken } = await this.authService.getToken(
+      payload,
+    );
+
+    res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
+    console.log(accessToken);
+    return res.redirect('/');
   }
 
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))
-  async facebookAuth(@Req() req) {}
+  async facebookAuthRedirect(
+    @Req() req: RequestWithUser,
+    @Res() res: Response,
+  ) {
+    const user = req.user;
+    const payload: JwtPayload = {
+      sub: user.providerId,
+      email: user.email,
+      userId: user.userId,
+    };
+    const { accessToken, refreshToken } = await this.authService.getToken(
+      payload,
+    );
 
-  @Get('facebook/redirect')
-  @UseGuards(AuthGuard('facebook'))
-  facebookAuthRedirect(@Req() req) {
-    return this.authService.facebookLogin(req);
+    res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
+    console.log(accessToken);
+    return res.redirect('/');
   }
 }

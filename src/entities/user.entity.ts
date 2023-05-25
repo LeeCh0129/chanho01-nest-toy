@@ -1,4 +1,4 @@
-import { Posts } from 'src/post/post.entity';
+import { Posts } from 'src/entities/post.entity';
 import {
   Column,
   Entity,
@@ -10,7 +10,7 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  userId: number;
 
   @Column({ unique: true })
   email: string;
@@ -36,6 +36,6 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   otpCreationTime: Date;
 
-  @OneToMany(() => Posts, (post) => post.user)
+  @OneToMany(() => Posts, (post) => post.author)
   posts: Posts[];
 }

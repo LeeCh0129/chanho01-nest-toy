@@ -24,8 +24,7 @@ export class AuthService {
   }
 
   async validateUser(user: any) {
-    // look up the user in the database and return it if it exists,
-    // otherwise create a new user in the database and return that.
+    console.log(user);
     let userInDb = await this.userService.getUser(user.email);
     if (!userInDb) {
       userInDb = await this.userService.createUser(user);
@@ -37,10 +36,19 @@ export class AuthService {
     if (!req.user) {
       return 'No user from google';
     }
+    const user = req.user;
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      userId: user.id,
+    };
+    const token = await this.getToken(payload);
 
+    console.log('token:' + token);
     return {
       message: 'User information from google',
-      user: req.user,
+      user,
+      token,
     };
   }
 
@@ -48,10 +56,18 @@ export class AuthService {
     if (!req.user) {
       return 'No user from Naver';
     }
+    const user = req.user;
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      userId: user.id,
+    };
+    const token = await this.getToken(payload);
 
     return {
       message: 'User information from Naver',
-      user: req.user,
+      user,
+      token,
     };
   }
 
@@ -59,21 +75,37 @@ export class AuthService {
     if (!req.user) {
       return 'No user from Kakao';
     }
+    const user = req.user;
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      userId: user.id,
+    };
+    const token = await this.getToken(payload);
 
     return {
       message: 'User information from Kakao',
-      user: req.user,
+      user,
+      token,
     };
   }
 
   async facebookLogin(req) {
     if (!req.user) {
-      return 'No user from Kakao';
+      return 'No user from Facebook';
     }
+    const user = req.user;
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      userId: user.id,
+    };
+    const token = await this.getToken(payload);
 
     return {
-      message: 'User information from Kakao',
-      user: req.user,
+      message: 'User information from Facebook',
+      user,
+      token,
     };
   }
 }

@@ -1,33 +1,73 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PostRepository } from './post.repository';
-import { Posts } from './post.entity';
-import { User } from 'src/user/user.entity';
-import { CreatePostDto } from './create-post.dto';
+import { Posts } from '../entities/post.entity';
+import { User } from 'src/entities/user.entity';
+import { CreatePostDto } from './dtos/create-post.dto';
 import { PostStatus } from './post-status.enum';
-import { UpdatePostDto } from './update-post.dto';
+import { UpdatePostDto } from './dtos/update-post.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
-  constructor(private readonly postRepository: PostRepository) {}
+  constructor(
+    @InjectRepository(Posts) private postRepository: Repository<Posts>,
+  ) {}
+  // private readonly postRepository: PostRepository) {}
 
-  async getAllPosts(user: User): Promise<Posts[]> {
+  //   async getAllPosts(user: User): Promise<Posts[]> {
+  //     const query = this.postRepository.createQueryBuilder('post');
+  //     query.where('post.userId = :postId', { userId: user.id });
+  //     query.orderBy('post.updatedAt', 'DESC');
+  //     const posts = await query.getMany();
+  //     return posts;
+  //   }
+
+  async getAllPosts(): Promise<Posts[]> {
     const query = this.postRepository.createQueryBuilder('post');
-    query.where('post.userId = :postId', { userId: user.id });
     query.orderBy('post.updatedAt', 'DESC');
     const posts = await query.getMany();
     return posts;
   }
 
-  async createPost(createPostDto: CreatePostDto, user: User): Promise<Posts> {
-    return this.postRepository.createPost(createPostDto, user);
+  async getMyPosts(user: User): Promise<Posts[]> {
+    const query = this.postRepository.createQueryBuilder('post');
+    query.where('post.userId = :userId', { userId: user.userId });
+    query.orderBy('post.updatedAt', 'DESC');
+    const posts = await query.getMany();
+    return posts;
+  }
+
+  // async createPost(createPostDto: CreatePostDto, user: User): Promise<Posts> {
+  //   return this.postRepository.createPost(createPostDto, user);
+  // }
+
+  async createPost(user: User, title: string, content: string): Promise<Posts> {
+    try {
+      const post = await this.postRepository.create({
+        title,
+        content,
+        status: PostStatus.PUBLIC,
+        author: user,
+      });
+      await this.postRepository.save(post);
+      return post;
+    } catch (e) {
+      throw new InternalServerErrorException('게시글 작성에 실패했습니다.');
+    }
   }
 
   async getPostById(id: number): Promise<Posts> {
-    const found = await this.postRepository.findOne({ where: { id } });
+    const found = await this.postRepository.findOne({ where: { postId: id } });
 
     if (!found) {
       throw new NotFoundException(`Can't find Post with id ${id}`);
     }
+    console.log(found);
     return found;
   }
 

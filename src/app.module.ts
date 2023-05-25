@@ -5,7 +5,7 @@ import { UserController } from './user/user.controller';
 import { ConfigModule } from '@nestjs/config';
 import { WeatherModule } from './weather/weather.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
+import { User } from './entities/user.entity';
 import { UserService } from './user/user.service';
 import { UesrModule } from './user/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';

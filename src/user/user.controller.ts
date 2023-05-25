@@ -9,12 +9,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   // 유저 생성
   @Post('/create')
