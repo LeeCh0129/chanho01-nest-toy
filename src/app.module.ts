@@ -20,9 +20,10 @@ import { ImageModule } from './image/image.module';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmExModule } from './typeorm/typeorm-ex.module';
-import { PostRepository } from './post/post.repository';
-import { PostModule } from './post/post.module';
+import { PostRepository } from './posts/post.repository';
+import { PostModule } from './posts/post.module';
 import { PassportModule } from '@nestjs/passport';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { PassportModule } from '@nestjs/passport';
     ImageModule,
     AuthModule,
     PassportModule,
+    CommentsModule,
   ],
   controllers: [AppController, EmailController, NaverMapController],
   providers: [AppService],

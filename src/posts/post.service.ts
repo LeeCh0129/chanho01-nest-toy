@@ -11,21 +11,14 @@ import { PostStatus } from './post-status.enum';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Comment } from 'src/entities/comment.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Posts) private postRepository: Repository<Posts>,
+    @InjectRepository(Comment) private commentRepository: Repository<Comment>,
   ) {}
-  // private readonly postRepository: PostRepository) {}
-
-  //   async getAllPosts(user: User): Promise<Posts[]> {
-  //     const query = this.postRepository.createQueryBuilder('post');
-  //     query.where('post.userId = :postId', { userId: user.id });
-  //     query.orderBy('post.updatedAt', 'DESC');
-  //     const posts = await query.getMany();
-  //     return posts;
-  //   }
 
   async getAllPosts(): Promise<Posts[]> {
     const query = this.postRepository.createQueryBuilder('post');

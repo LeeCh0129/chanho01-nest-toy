@@ -5,9 +5,11 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { PostStatus } from '../post/post-status.enum';
+import { PostStatus } from '../posts/post-status.enum';
 import { User } from './user.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Posts extends BaseEntity {
@@ -30,6 +32,9 @@ export class Posts extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts)
   // @JoinColumn({ name: 'userId' }) // 외래 키를 userId로 지정
   author: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

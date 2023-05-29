@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        메인 페이지
+    </title>
+    <style>
+        .rounded-box {
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 0 auto;
+            width: 350px;
+            height: 150px;
+        }
+
+        .space-between {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #article-profile-left {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+
+        #article-profile #article-profile-left {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 13px;
+        }
+
+        #article-profile #article-profile-left #nickname {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.5;
+            letter-spacing: -0.6px;
+            color: #212529;
+        }
+        #article-profile .space-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #article-profile #article-profile-image {
+            display: inline-block;
+        }
+        #article-profile #article-profile-image img {
+            width: 40px;
+            height: 40px;
+            -o-object-fit: cover;
+            object-fit: cover;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+        }
+        #article-description {
+            margin: 0 auto;
+            border-bottom: 1px solid #e9ecef;
+        }
+        #article-description #article-counts {
+            font-size: 13px;
+            line-height: 1.46;
+            letter-spacing: -0.6px;
+            color: #868e96;
+        }
+        #floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: darkgray;
+            color: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            line-height: 60px;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+        }
+        li {
+            list-style: none;
+        }
+    </style>
+    <script>
+        function newWrite() {
+            window.open("webp_write.html", "_self", "");
+        }
+        function move() {
+            window.open("webp_post_map.html", "_self", "");
+        }
+        function over(obj) {
+            obj.style.cursor="pointer";
+        }
+    </script>
+</head>
+<body>
+<ul>
+    <li>  
+    <div class="rounded-box" onclick="move()" onmouseover="over(this)">
+        <section id="article-profile">
+            <div class="space-between">
+                <div>
+                    <div id="article-profile-image">
+                        <img src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-c649f052a34ebc4eee35048815d8e4f73061bf74552558bb70e07133f25524f9.png">
+                    </div>
+                    <div id="article-profile-left">
+                        <div id="nickname">사용자 이름</div>
+                        <div id="region-name">장소 이름</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="article-description">
+            <p id="article-counts">
+                <time>게시 시간</time>
+            </p>
+        </section>
+        <div class="content">
+            <p>
+                장소에 대한 설명
+            </p>
+        </div>
+    </div>
+    <div id="floating-button" onclick="newWrite()">+</div>
+    </li>
+</ul>
+</body>
+</html>

@@ -6,6 +6,7 @@ import {
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class User {
@@ -14,9 +15,6 @@ export class User {
 
   @Column({ unique: true })
   email: string;
-
-  // @Column({ nullable: true })
-  // password: string;
 
   @Column()
   username: string;
@@ -27,15 +25,18 @@ export class User {
   @Column()
   providerId: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdDt: Date;
-
-  @Column({ nullable: true })
-  otp: string;
-
   @Column({ type: 'timestamp', nullable: true })
   otpCreationTime: Date;
 
   @OneToMany(() => Posts, (post) => post.author)
   posts: Posts[];
+
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Comment[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdDt: Date;
+
+  @Column({ nullable: true })
+  otp: string;
 }
